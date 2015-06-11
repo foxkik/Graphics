@@ -14,77 +14,125 @@ namespace Graphic
     {
         Graphics Draw;
         int flag = 0;
+        Pencil pencil;
 
         /*тестовая хрень*/
 
-        float bx = 0, by = 0;
-        float ddx=0, ddy=0;
-
+        float x1 = 0, y1 = 0;
+        float x2 = 0, y2 = 0;
+        Bitmap picture;
         /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
         public MyForm()
         {
             InitializeComponent();
+            picture = new Bitmap(942, 598);
+            pencil = new Pencil();
         }
 
         private void MyForm_Load(object sender, EventArgs e)
-        {        
+        {
         }
 
         private void MyForm_Paint(object sender, PaintEventArgs e)
         {
             Draw = e.Graphics;
-            float WorkplaceX = this.Width / 2 - this.Width / 2 + 10;
-            float WorkplaceY = this.Height / 2 - this.Height / 2 + 10;
-            float WorkplaceWidth = 2*this.Width / 3;
-            float WorkplaceHeight = 4 * this.Height / 5;
-       //     Draw.FillRectangle(new SolidBrush(Color.White), WorkplaceX, WorkplaceY, WorkplaceWidth, WorkplaceHeight);
 
             Palette palette = new Palette();
-            foreach(MyColors cl in palette.MyPalette)
+            foreach (MyColors cl in palette.MyPalette)
             {
-                Draw.FillRectangle(cl.BrushColor, cl.X, cl.Y, 30, 30);
+                Draw.FillRectangle(new SolidBrush(cl.color), cl.X, cl.Y, 30, 30);
             }
 
-
-      //      if(flag!=0)
-        //    Draw.DrawLine(new Pen(Color.Tomato,3)bx,by,)
-
-
-
-            //if(flag!=0)
-            //    Draw.DrawRectangle(new Pen(Color.Red), 900, 30, 34, 34);
-         //   Invalidate();
         }
 
         private void MyForm_MouseMove(object sender, MouseEventArgs e)
         {
-            //try
-            //{
-            //    Palette palette = new Palette();
-                
-            //    foreach (MyColors cl in palette.MyPalette)
-            //    {
-            //        if (e.X >= cl.X && e.Y >= cl.Y && e.X <= cl.X + 30 && e.Y <= cl.Y + 30)
-            //            //  Draw.DrawRectangle(new Pen(Color.White), cl.X - 2, cl.Y - 2, 34, 34);
-            //            //       Draw.FillRectangle(cl.BrushColor, 990, 30, 34, 34);
-            //            //Draw.DrawRectangle(new Pen(Color.White,))
-            //            flag=60;
-            //    }
-            //    this.Invalidate();
-            //}
-            //catch(Exception ex)
-            //{
-            //    string lala = ex.Message;
-            //}
+
         }
 
         private void MyForm_MouseDown(object sender, MouseEventArgs e)
         {
-            flag = 9;
-            bx = e.X;
-            by = e.Y;
+
         }
 
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            x1 = e.X;
+            y1 = e.Y;
+            flag = 9;
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (flag != 0)
+            {
+                x2 = e.X;
+                y2 = e.Y;
+
+                Graphics g = Graphics.FromImage(picture);
+
+                g.DrawLine(new Pen(pencil.PencilColor, pencil.Width), x1, y1, x2, y2);
+                pictureBox1.Image = picture;
+                pictureBox1.Invalidate();
+                x1 = x2;
+                y1 = y2;
+            }
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            flag = 0;
+        }
+
+        private void ButtonCreate_Click(object sender, EventArgs e)
+        {
+            picture = new Bitmap(942, 598);
+            pictureBox1.Image = picture;
+            pictureBox1.Invalidate();
+        }
+
+        private void MyForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            Palette palette = new Palette();
+            foreach (MyColors cl in palette.MyPalette)
+            {
+                if (e.X >= cl.X && e.Y >= cl.Y && e.X <= cl.X + 30 && e.Y <= cl.Y + 30)
+                {
+                    pencil.PencilColor = cl.color;
+                    
+                }
+            }
+        }
+
+        private void CBwidth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var tmp = CBwidth.SelectedItem;
+            tmp = tmp.ToString().Substring(8, 1);
+            pencil.Width = (float)Convert.ToDouble(tmp) + 1;
+            tmp = null;
+        }
+
+        private void RBpencil_Click(object sender, EventArgs e)
+        {
+            CBwidth.Enabled = true;
+            if (CBwidth.SelectedItem != null)
+            {
+                var tmp = CBwidth.SelectedItem;
+                tmp = tmp.ToString().Substring(8, 1);
+                pencil.Width = (float)Convert.ToDouble(tmp) + 1;
+                tmp = null;
+            }
+            else
+                pencil.Width = 2;
+            pencil.PencilColor = Color.Black;
+        }
+
+        private void RBeraser_Click(object sender, EventArgs e)
+        {
+            CBwidth.Enabled = false;
+            pencil.Width = 10;
+            pencil.PencilColor = Color.White;
+        }
     }
 }

@@ -12,10 +12,12 @@ namespace Graphic
     }
     class Pencil
     {
-        public float X, Y, dx, dy, Width;
-        public Pencil(float w)
+        public float Width;
+        public Color PencilColor;
+        public Pencil()
         {
-            Width = w;
+            Width = 2;
+            PencilColor = Color.Black;
         }
         public void DrawLine(Graphics g, Color color, float ndx, float ndy)
         {

@@ -10,12 +10,12 @@ namespace Graphic
     public class MyColors
     {
         public float X, Y;
-        public SolidBrush BrushColor;
-        public MyColors(float nx, float ny, SolidBrush nbr)
+        public Color color;
+        public MyColors(float nx, float ny, Color nbr)
         {
             X = nx;
             Y = ny;
-            BrushColor = nbr;
+            color = nbr;
         }
     }
 
@@ -23,27 +23,27 @@ namespace Graphic
     {
         public List<MyColors> MyPalette;
 
-        public SolidBrush[] LBrushColors;
+        public Color[] LColors;
         public Palette()
         {
-            LBrushColors = new SolidBrush[10];
-            LBrushColors[0] = new SolidBrush(Color.Black);
-            LBrushColors[1] = new SolidBrush(Color.Gray);
-            LBrushColors[2] = new SolidBrush(Color.Red);
-            LBrushColors[3] = new SolidBrush(Color.Pink);
-            LBrushColors[4] = new SolidBrush(Color.Yellow);
-            LBrushColors[5] = new SolidBrush(Color.Orange);
-            LBrushColors[6] = new SolidBrush(Color.LightBlue);
-            LBrushColors[7] = new SolidBrush(Color.Blue);
-            LBrushColors[8] = new SolidBrush(Color.Brown);
-            LBrushColors[9] = new SolidBrush(Color.Green);
+            LColors = new Color[10];
+            LColors[0] = Color.Black;
+            LColors[1] = Color.Gray;
+            LColors[2] = Color.Red;
+            LColors[3] = Color.Pink;
+            LColors[4] = Color.Yellow;
+            LColors[5] = Color.Orange;
+            LColors[6] = Color.LightBlue;
+            LColors[7] = Color.Blue;
+            LColors[8] = Color.Brown;
+            LColors[9] = Color.Green;
 
 
             MyPalette = new List<MyColors>();
             for (int i = 0; i < 5; i++)
-                MyPalette.Add(new MyColors(1050 + i * 60, 520, LBrushColors[i]));
+                MyPalette.Add(new MyColors(1050 + i * 60, 520, LColors[i]));
             for (int i = 5; i < 10; i++)
-                MyPalette.Add(new MyColors(1050 + (i - 5) * 60, 560, LBrushColors[i]));
+                MyPalette.Add(new MyColors(1050 + (i - 5) * 60, 560, LColors[i]));
         }
 
     }
