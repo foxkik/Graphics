@@ -58,6 +58,7 @@
             this.ButtonSave.TabIndex = 0;
             this.ButtonSave.Text = "Сохранить";
             this.ButtonSave.UseVisualStyleBackColor = false;
+            this.ButtonSave.Click += new System.EventHandler(this.ButtonSave_Click);
             // 
             // ButtonLoad
             // 
@@ -70,6 +71,7 @@
             this.ButtonLoad.TabIndex = 1;
             this.ButtonLoad.Text = "Загрузить";
             this.ButtonLoad.UseVisualStyleBackColor = false;
+            this.ButtonLoad.Click += new System.EventHandler(this.ButtonLoad_Click);
             // 
             // ButtonCreate
             // 
@@ -237,7 +239,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.pictureBox1.BackColor = System.Drawing.Color.White;
             this.pictureBox1.Location = new System.Drawing.Point(22, 9);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(942, 598);
@@ -281,8 +283,6 @@
             this.Load += new System.EventHandler(this.MyForm_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.MyForm_Paint);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseClick);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
