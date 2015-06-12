@@ -178,16 +178,18 @@ namespace Graphic
         private void RBline_Click(object sender, EventArgs e)
         {
             CBwidth.Enabled = true;
-            figure = new Figure();
             figure.Type = "line";
-            pencil.PencilColor = pencil.PreviousColor;
+            if (pencil.Width == 10)
+                pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
 
         private void RBellips_Click(object sender, EventArgs e)
         {
-            figure = new Figure();
             figure.Type = "ellips";
+            if (pencil.Width == 10)
+                pencil.PencilColor = pencil.PreviousColor;
+            pencil.SetOldWidth(CBwidth.SelectedItem);
         }
 
         private void RBrectangle_Click(object sender, EventArgs e)
