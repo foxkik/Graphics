@@ -1,0 +1,18 @@
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\bin\Debug\Graphic.exe.config
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\bin\Debug\Graphic.exe
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\bin\Debug\Graphic.pdb
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.csprojResolveAssemblyReference.cache
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.MyForm.resources
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.Properties.Resources.resources
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.csproj.GenerateResource.Cache
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.exe
+C:\Users\usertpu\Documents\4-Семестр4\идз\Graphic\Graphic\obj\Debug\Graphic.pdb
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\bin\Debug\Graphic.exe.config
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.exe
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.pdb
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\bin\Debug\Graphic.exe
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\bin\Debug\Graphic.pdb
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.csprojResolveAssemblyReference.cache
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.MyForm.resources
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.Properties.Resources.resources
+C:\Users\foxkik\Documents\1ПРОЕКТЫ\семестр4\Технологии программирования\Graphic\Graphic\obj\Debug\Graphic.csproj.GenerateResource.Cache
