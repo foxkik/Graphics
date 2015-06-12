@@ -163,6 +163,7 @@
             this.RBline.TabStop = true;
             this.RBline.Text = "Линия";
             this.RBline.UseVisualStyleBackColor = true;
+            this.RBline.Click += new System.EventHandler(this.RBline_Click);
             // 
             // RBellips
             // 
@@ -176,6 +177,7 @@
             this.RBellips.TabStop = true;
             this.RBellips.Text = "Эллипс";
             this.RBellips.UseVisualStyleBackColor = true;
+            this.RBellips.Click += new System.EventHandler(this.RBellips_Click);
             // 
             // RBrectangle
             // 
@@ -189,6 +191,7 @@
             this.RBrectangle.TabStop = true;
             this.RBrectangle.Text = "Прямоугольник";
             this.RBrectangle.UseVisualStyleBackColor = true;
+            this.RBrectangle.Click += new System.EventHandler(this.RBrectangle_Click);
             // 
             // RBtriangle
             // 
@@ -201,6 +204,7 @@
             this.RBtriangle.TabStop = true;
             this.RBtriangle.Text = "Произвольный треугольник";
             this.RBtriangle.UseVisualStyleBackColor = true;
+            this.RBtriangle.Click += new System.EventHandler(this.RBtriangle_Click);
             // 
             // RBsqtriangle
             // 
@@ -213,6 +217,7 @@
             this.RBsqtriangle.TabStop = true;
             this.RBsqtriangle.Text = "Прямоугольный треугольник";
             this.RBsqtriangle.UseVisualStyleBackColor = true;
+            this.RBsqtriangle.Click += new System.EventHandler(this.RBsqtriangle_Click);
             // 
             // RBfilling
             // 
@@ -226,6 +231,7 @@
             this.RBfilling.TabStop = true;
             this.RBfilling.Text = "Заливка";
             this.RBfilling.UseVisualStyleBackColor = true;
+            this.RBfilling.Click += new System.EventHandler(this.RBfilling_Click);
             // 
             // label2
             // 

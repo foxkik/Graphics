@@ -15,10 +15,17 @@ namespace Graphic
         Graphics Draw;
         Graphics g;
         bool MouseDownFlag = false; //чтобы отследивать, когда необходимо рисовать/стирать
+
+    //    string FigureChosen = "";
+
         float ChosenColorFlagX = 1050; //выбранный цвет палитры
         float ChosenColorFlagY = 520;
         int StandartHeight = 598, StandartWidth = 942;
         Pencil pencil;
+      //  Line line;
+
+        Figure figure;
+
 
         /*координаты карандаша*/
         float x1 = 0, y1 = 0;
@@ -30,12 +37,14 @@ namespace Graphic
         {
             InitializeComponent();
           //  picture = new Bitmap(942, 598);
-            
             picture = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             pencil = new Pencil();
+       //     line = new Line();
+            figure = new Figure();
             g = Graphics.FromImage(picture);
             g.Clear(Color.White);
             pictureBox1.BackColor = Color.White;
+            pictureBox1.Image = picture;
         }
 
         private void MyForm_Load(object sender, EventArgs e)
@@ -59,34 +68,70 @@ namespace Graphic
         {
             x1 = e.X;
             y1 = e.Y;
+            if(figure.Type !="")
+            {
+                    figure.StartX = e.X;
+                    figure.StartY = e.Y;
+            }
             MouseDownFlag = true;
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (MouseDownFlag==true)
+            x2 = e.X;
+            y2 = e.Y;
+            if (MouseDownFlag == true && figure.Type== "")
             {
-                x2 = e.X;
-                y2 = e.Y;
-                g = Graphics.FromImage(picture);
                 g.DrawLine(new Pen(pencil.PencilColor, pencil.Width), x1, y1, x2, y2);
-                pictureBox1.Image = picture;
                 pictureBox1.Invalidate();
                 x1 = x2;
                 y1 = y2;
+            }
+
+            else if (MouseDownFlag == true && figure.Type == "line")
+            {
+                figure.FinishX = e.X;
+                figure.FinishY = e.Y;
+            }
+            else if (MouseDownFlag == true && figure.Type == "ellips")
+            {
+                figure.FinishX = e.X;
+                figure.FinishY = e.Y;
+            }
+            else if (figure.Type == "rectangle")
+            {
+
+            }
+            else if (figure.Type == "triangle")
+            {
+
+            }
+            else if (figure.Type == "sqtriangle")
+            {
+
             }
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             MouseDownFlag = false;
-        }
+            pictureBox1.Image = picture;
 
-        
+            if (figure.Type == "line")
+            {
+                g.DrawLine(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.FinishX, figure.FinishY);
+                pictureBox1.Invalidate();
+            }
+            else if (figure.Type == "ellips")
+            {
+                figure.CorrectPosition();
+                g.DrawEllipse(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.Width, figure.Hight);
+            }
+        }
 
         private void MyForm_MouseClick(object sender, MouseEventArgs e)
         {
-            if (RBpencil.Checked == true)
+            if (RBeraser.Checked == false)
             {
                 Palette palette = new Palette();
                 foreach (MyColors cl in palette.MyPalette)
@@ -114,25 +159,57 @@ namespace Graphic
         private void RBpencil_Click(object sender, EventArgs e)//карандаш
         {
             CBwidth.Enabled = true; //включить выбор толщины
-            if (CBwidth.SelectedItem != null) //присваивание выбранной толщины
-            {
-                var tmp = CBwidth.SelectedItem;
-                tmp = tmp.ToString().Substring(8, 1);
-                pencil.Width = (float)Convert.ToDouble(tmp) + 1;
-                tmp = null;
-            }
+            pencil.SetOldWidth(CBwidth.SelectedItem);
+            if (figure.Type == "")
+                pencil.PencilColor = pencil.PreviousColor;
             else
-                pencil.Width = 2; //выставление варианта по умолчанию
-            pencil.PencilColor = pencil.PreviousColor;
+                figure.Type = "";
         }
+
 
         private void RBeraser_Click(object sender, EventArgs e)//ластик
         {
+            figure.Type = "";
             CBwidth.Enabled = false;
             pencil.Width = 10;
             pencil.PreviousColor = pencil.PencilColor;
             pencil.PencilColor = Color.White;
         }
+        private void RBline_Click(object sender, EventArgs e)
+        {
+            CBwidth.Enabled = true;
+            figure = new Figure();
+            figure.Type = "line";
+            pencil.PencilColor = pencil.PreviousColor;
+            pencil.SetOldWidth(CBwidth.SelectedItem);
+        }
+
+        private void RBellips_Click(object sender, EventArgs e)
+        {
+            figure = new Figure();
+            figure.Type = "ellips";
+        }
+
+        private void RBrectangle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RBtriangle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RBsqtriangle_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RBfilling_Click(object sender, EventArgs e)
+        {
+            CBwidth.Enabled = false;
+        }
+
 
         /*ОБРАБОТКА КНОПОК*/
         private void ButtonCreate_Click(object sender, EventArgs e)//сбросить всё
@@ -140,16 +217,16 @@ namespace Graphic
             picture = new Bitmap(StandartWidth, StandartHeight);
             pictureBox1.Size = picture.Size;
             pictureBox1.Image = picture;
-            Graphics gi = Graphics.FromImage(picture);
-            gi.Clear(Color.White);
+            g = Graphics.FromImage(picture);
+            g.Clear(Color.White);
         }
         private void ButtonSave_Click(object sender, EventArgs e)//сохранить
         {
             SaveFileDialog SaveDialog = new SaveFileDialog();
             SaveDialog.Title = "Сохранить изображение как ...";
             SaveDialog.Filter =
-                "Bitmap File(*.bmp)|*.bmp|" +
                 "JPEG File(*.jpg)|*.jpg|" +
+                "Bitmap File(*.bmp)|*.bmp|" +
                 "PNG File(*.png)|*.png";
             //окно компактнее, есть "справка"
             SaveDialog.ShowHelp = true;
@@ -162,7 +239,7 @@ namespace Graphic
                 //сохранение в нужном формате
                 try
                 {
-                    picture = (Bitmap)pictureBox1.Image;
+         //           picture = (Bitmap)pictureBox1.Image;
                     switch (FileFormat)
                     {
                         case "bmp":
@@ -188,8 +265,9 @@ namespace Graphic
         private void ButtonLoad_Click(object sender, EventArgs e)//загрузить
         {
             OpenFileDialog OpenDialog = new OpenFileDialog();
-            OpenDialog.Filter = "Bitmap File(*.bmp)|*.bmp|" +
+            OpenDialog.Filter =
                 "JPEG File(*.jpg)|*.jpg|" +
+                "Bitmap File(*.bmp)|*.bmp|" +
                 "PNG File(*.png)|*.png";
             OpenDialog.ShowHelp = true;
             if(OpenDialog.ShowDialog() == DialogResult.OK)
@@ -203,7 +281,12 @@ namespace Graphic
                     pictureBox1.Size = picture.Size;
                     pictureBox1.Image = picture;
                 }
-
+                else
+                {
+                    pictureBox1.Height = StandartHeight;
+                    pictureBox1.Width = StandartWidth;
+                    pictureBox1.Image = picture;
+                }
                 pictureBox1.Invalidate();
                 int p = 0;
             }
