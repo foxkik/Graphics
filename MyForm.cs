@@ -26,6 +26,7 @@ namespace Graphic
 
         Figure figure;
 
+        Triangle triangle;
 
         /*координаты карандаша*/
         float x1 = 0, y1 = 0;
@@ -36,11 +37,10 @@ namespace Graphic
         public MyForm()
         {
             InitializeComponent();
-          //  picture = new Bitmap(942, 598);
             picture = new Bitmap(pictureBox1.Width, pictureBox1.Height);
             pencil = new Pencil();
-       //     line = new Line();
             figure = new Figure();
+            triangle = new Triangle();
             g = Graphics.FromImage(picture);
             g.Clear(Color.White);
             pictureBox1.BackColor = Color.White;
@@ -68,10 +68,15 @@ namespace Graphic
         {
             x1 = e.X;
             y1 = e.Y;
-            if(figure.Type !="")
+            if (figure.Type != "")
             {
-                    figure.StartX = e.X;
-                    figure.StartY = e.Y;
+                figure.StartX = e.X;
+                figure.StartY = e.Y;
+                if (figure.Type == "triangle" || figure.Type == "sqtriangle")
+                {
+                    triangle.StartX = e.X;
+                    triangle.StartY = e.Y;
+                }
             }
             MouseDownFlag = true;
         }
@@ -88,27 +93,15 @@ namespace Graphic
                 y1 = y2;
             }
 
-            else if (MouseDownFlag == true && figure.Type == "line")
+            else if (MouseDownFlag == true && figure.Type != "")
             {
                 figure.FinishX = e.X;
                 figure.FinishY = e.Y;
-            }
-            else if (MouseDownFlag == true && figure.Type == "ellips")
-            {
-                figure.FinishX = e.X;
-                figure.FinishY = e.Y;
-            }
-            else if (figure.Type == "rectangle")
-            {
-
-            }
-            else if (figure.Type == "triangle")
-            {
-
-            }
-            else if (figure.Type == "sqtriangle")
-            {
-
+                if (figure.Type == "triangle" || figure.Type == "sqtriangle")
+                {
+                    triangle.FinishX = e.X;
+                    triangle.FinishY = e.Y;
+                }
             }
         }
 
@@ -118,14 +111,23 @@ namespace Graphic
             pictureBox1.Image = picture;
 
             if (figure.Type == "line")
-            {
                 g.DrawLine(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.FinishX, figure.FinishY);
-                pictureBox1.Invalidate();
-            }
-            else if (figure.Type == "ellips")
+            else
             {
                 figure.CorrectPosition();
-                g.DrawEllipse(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.Width, figure.Hight);
+                if (figure.Type == "ellips")
+                    g.DrawEllipse(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.Width, figure.Hight);
+                else if (figure.Type == "rectangle")
+                    g.DrawRectangle(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.Width, figure.Hight);
+                else if (figure.Type == "triangle" || figure.Type == "sqtriangle")
+                {
+                    triangle.CalculatePoint();
+                    Point[] points = new Point[3];
+                    points[0] = triangle.cenrt;
+                    points[1] = triangle.right;
+                    points[2] = triangle.left;
+                    g.DrawPolygon(new Pen(pencil.PencilColor, pencil.Width), points);
+                }
             }
         }
 
@@ -166,7 +168,6 @@ namespace Graphic
                 figure.Type = "";
         }
 
-
         private void RBeraser_Click(object sender, EventArgs e)//ластик
         {
             figure.Type = "";
@@ -194,17 +195,28 @@ namespace Graphic
 
         private void RBrectangle_Click(object sender, EventArgs e)
         {
-
+            figure.Type = "rectangle";
+            if (pencil.Width == 10)
+                pencil.PencilColor = pencil.PreviousColor;
+            pencil.SetOldWidth(CBwidth.SelectedItem);
         }
 
         private void RBtriangle_Click(object sender, EventArgs e)
         {
-
+            figure.Type = "triangle";
+            triangle.Type = "triangle";
+            if (pencil.Width == 10)
+                pencil.PencilColor = pencil.PreviousColor;
+            pencil.SetOldWidth(CBwidth.SelectedItem);
         }
 
         private void RBsqtriangle_Click(object sender, EventArgs e)
         {
-
+            figure.Type = "sqtriangle";
+            triangle.Type = "sqtriangle";
+            if (pencil.Width == 10)
+                pencil.PencilColor = pencil.PreviousColor;
+            pencil.SetOldWidth(CBwidth.SelectedItem);
         }
 
         private void RBfilling_Click(object sender, EventArgs e)
@@ -237,27 +249,26 @@ namespace Graphic
 
                 FileName = SaveDialog.FileName;//получает путь до файла, имя и формат
                 FileFormat = FileName.Remove(0, FileName.Length - 3);//последние три символа - формат
-                
+
                 //сохранение в нужном формате
                 try
                 {
-         //           picture = (Bitmap)pictureBox1.Image;
                     switch (FileFormat)
                     {
                         case "bmp":
-                                picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-                                break;
+                            picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                            break;
                         case "jpg":
-                                picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                break;
+                            picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            break;
                         case "png":
-                                picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Png);
-                                break;
+                            picture.Save(FileName, System.Drawing.Imaging.ImageFormat.Png);
+                            break;
                         default:
                             throw new Exception();
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }

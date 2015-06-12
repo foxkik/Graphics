@@ -85,13 +85,40 @@ namespace Graphic
             }
         }
     }
-    //class Ellips : Figure 
-    //{
-    //    public string Type;
-    //    public Ellips()
-    //    {
-    //        Type = "ellips";
-    //    }
-    //}
+
+    class Triangle:Figure
+    {
+        public Point cenrt, left, right;
+        public Triangle()
+        {
+            cenrt.X = 0;
+            cenrt.Y = 0;
+            left.X = 0;
+            left.Y = 0;
+            right.X = 0;
+            right.Y = 0;
+        }
+        public void CalculatePoint()
+        {
+            if (Type == "triangle")
+            {
+                cenrt.X = (int)StartX + (int)((Math.Abs(FinishX - StartX)) / 2);
+                cenrt.Y = (int)StartY;
+                right.X = (int)FinishX;
+                right.Y = (int)FinishY;
+                left.X = (int)StartX;
+                left.Y = (int)FinishY;
+            }
+            else
+            {
+                cenrt.X = (int)StartX;
+                cenrt.Y = (int)StartY;
+                right.X = (int)FinishX;
+                right.Y = (int)FinishY;
+                left.X = (int)StartX;
+                left.Y = (int)FinishY;
+            }
+        }
+    }
 
 }
