@@ -12,25 +12,20 @@ namespace Graphic
 {
     public partial class MyForm : Form
     {
-        Graphics Draw;
-        Graphics g;
+        Graphics Draw; //рисование на форме
+        Graphics g;//рисование на pictureBox
         bool MouseDownFlag = false; //чтобы отследивать, когда необходимо рисовать/стирать
-
-    //    string FigureChosen = "";
-
         float ChosenColorFlagX = 1050; //выбранный цвет палитры
         float ChosenColorFlagY = 520;
         int StandartHeight = 598, StandartWidth = 942;
         Pencil pencil;
-      //  Line line;
-
         Figure figure;
-
         Triangle triangle;
-
+        Filler filler;
         /*координаты карандаша*/
         float x1 = 0, y1 = 0;
         float x2 = 0, y2 = 0;
+        /*====================*/
         Bitmap picture;
         string FileName;
         string FileFormat;
@@ -41,6 +36,7 @@ namespace Graphic
             pencil = new Pencil();
             figure = new Figure();
             triangle = new Triangle();
+            
             g = Graphics.FromImage(picture);
             g.Clear(Color.White);
             pictureBox1.BackColor = Color.White;
@@ -57,13 +53,11 @@ namespace Graphic
             Draw = e.Graphics;
             Palette palette = new Palette();
             foreach (MyColors cl in palette.MyPalette)
-            {
                 Draw.FillRectangle(new SolidBrush(cl.color), cl.X, cl.Y, 30, 30);
-            }
             Draw.DrawRectangle(new Pen(Color.White, 2), ChosenColorFlagX - 2, ChosenColorFlagY - 2, 34, 34);
         }
 
-
+        /*РИСОВАНИЕ*/
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
             x1 = e.X;
@@ -78,6 +72,11 @@ namespace Graphic
                     triangle.StartY = e.Y;
                 }
             }
+            else if (RBfilling.Checked)
+            {
+                filler.RequiredColor = pencil.PencilColor;
+                filler.Fill(picture, e.X, e.Y);
+            }
             MouseDownFlag = true;
         }
 
@@ -85,7 +84,7 @@ namespace Graphic
         {
             x2 = e.X;
             y2 = e.Y;
-            if (MouseDownFlag == true && figure.Type== "")
+            if (MouseDownFlag == true && figure.Type== "" && !(RBfilling.Checked))
             {
                 g.DrawLine(new Pen(pencil.PencilColor, pencil.Width), x1, y1, x2, y2);
                 pictureBox1.Invalidate();
@@ -121,7 +120,7 @@ namespace Graphic
                     g.DrawRectangle(new Pen(pencil.PencilColor, pencil.Width), figure.StartX, figure.StartY, figure.Width, figure.Hight);
                 else if (figure.Type == "triangle" || figure.Type == "sqtriangle")
                 {
-                    triangle.CalculatePoint();
+                    triangle.CalculatePoints();
                     Point[] points = new Point[3];
                     points[0] = triangle.cenrt;
                     points[1] = triangle.right;
@@ -180,7 +179,7 @@ namespace Graphic
         {
             CBwidth.Enabled = true;
             figure.Type = "line";
-            if (pencil.Width == 10)
+            if(pencil.PencilColor==Color.White)
                 pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
@@ -188,7 +187,7 @@ namespace Graphic
         private void RBellips_Click(object sender, EventArgs e)
         {
             figure.Type = "ellips";
-            if (pencil.Width == 10)
+            if (pencil.PencilColor == Color.White)
                 pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
@@ -196,7 +195,7 @@ namespace Graphic
         private void RBrectangle_Click(object sender, EventArgs e)
         {
             figure.Type = "rectangle";
-            if (pencil.Width == 10)
+            if (pencil.PencilColor == Color.White)
                 pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
@@ -205,7 +204,7 @@ namespace Graphic
         {
             figure.Type = "triangle";
             triangle.Type = "triangle";
-            if (pencil.Width == 10)
+            if (pencil.PencilColor == Color.White)
                 pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
@@ -214,7 +213,7 @@ namespace Graphic
         {
             figure.Type = "sqtriangle";
             triangle.Type = "sqtriangle";
-            if (pencil.Width == 10)
+            if (pencil.PencilColor == Color.White)
                 pencil.PencilColor = pencil.PreviousColor;
             pencil.SetOldWidth(CBwidth.SelectedItem);
         }
@@ -222,6 +221,8 @@ namespace Graphic
         private void RBfilling_Click(object sender, EventArgs e)
         {
             CBwidth.Enabled = false;
+            figure.Type = "";
+            filler = new Filler();
         }
 
 
@@ -236,23 +237,20 @@ namespace Graphic
         }
         private void ButtonSave_Click(object sender, EventArgs e)//сохранить
         {
-            SaveFileDialog SaveDialog = new SaveFileDialog();
-            SaveDialog.Title = "Сохранить изображение как ...";
-            SaveDialog.Filter =
-                "JPEG File(*.jpg)|*.jpg|" +
-                "Bitmap File(*.bmp)|*.bmp|" +
-                "PNG File(*.png)|*.png";
-            //окно компактнее, есть "справка"
-            SaveDialog.ShowHelp = true;
-            if (SaveDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-
-                FileName = SaveDialog.FileName;//получает путь до файла, имя и формат
-                FileFormat = FileName.Remove(0, FileName.Length - 3);//последние три символа - формат
-
-                //сохранение в нужном формате
-                try
+                SaveFileDialog SaveDialog = new SaveFileDialog();
+                SaveDialog.Title = "Сохранить изображение как ...";
+                SaveDialog.Filter =
+                    "JPEG File(*.jpg)|*.jpg|" +
+                    "Bitmap File(*.bmp)|*.bmp|" +
+                    "PNG File(*.png)|*.png";
+                SaveDialog.ShowHelp = true;//окно компактнее, есть "справка"
+                if (SaveDialog.ShowDialog() == DialogResult.OK)
                 {
+                    FileName = SaveDialog.FileName;//получает путь до файла, имя и формат
+                    FileFormat = FileName.Remove(0, FileName.Length - 3);//последние три символа - формат
+                    //сохранение в нужном формате
                     switch (FileFormat)
                     {
                         case "bmp":
@@ -268,40 +266,44 @@ namespace Graphic
                             throw new Exception();
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void ButtonLoad_Click(object sender, EventArgs e)//загрузить
         {
-            OpenFileDialog OpenDialog = new OpenFileDialog();
-            OpenDialog.Filter =
-                "JPEG File(*.jpg)|*.jpg|" +
-                "Bitmap File(*.bmp)|*.bmp|" +
-                "PNG File(*.png)|*.png";
-            OpenDialog.ShowHelp = true;
-            if(OpenDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                FileName = OpenDialog.FileName;
-                picture = new Bitmap(FileName);
-
-
-                if (picture.Height <= pictureBox1.Height || picture.Width <= pictureBox1.Width)
+                OpenFileDialog OpenDialog = new OpenFileDialog();
+                OpenDialog.Filter =
+                    "JPEG File(*.jpg)|*.jpg|" +
+                    "Bitmap File(*.bmp)|*.bmp|" +
+                    "PNG File(*.png)|*.png";
+                OpenDialog.ShowHelp = true;
+                if (OpenDialog.ShowDialog() == DialogResult.OK)
                 {
-                    pictureBox1.Size = picture.Size;
-                    pictureBox1.Image = picture;
+                    FileName = OpenDialog.FileName;
+                    picture = new Bitmap(FileName);
+                    if (picture.Height <= pictureBox1.Height || picture.Width <= pictureBox1.Width)
+                    {
+                        pictureBox1.Size = picture.Size;
+                        pictureBox1.Image = picture;
+                    }
+                    else
+                    {
+                        pictureBox1.Height = StandartHeight;
+                        pictureBox1.Width = StandartWidth;
+                        pictureBox1.Image = picture;
+                    }
+                    pictureBox1.Invalidate();
                 }
-                else
-                {
-                    pictureBox1.Height = StandartHeight;
-                    pictureBox1.Width = StandartWidth;
-                    pictureBox1.Image = picture;
-                }
-                pictureBox1.Invalidate();
-                int p = 0;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
