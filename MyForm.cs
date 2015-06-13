@@ -300,6 +300,7 @@ namespace Graphic
                     }
                     pictureBox1.Invalidate();
                 }
+                g = Graphics.FromImage(picture);
             }
             catch(Exception ex)
             {
